@@ -1,0 +1,21 @@
+# Data files (too large for GitHub)
+data/cumulative.csv
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# Virtual environment
+venv/
+env/
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large model files
+*.pkl
+*.joblib
