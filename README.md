@@ -101,6 +101,7 @@ kepler-exoplanet-classification/
 ├── phase2_statistics.py            # Hypothesis tests, correlations, outliers
 ├── phase3_visualizations.py        # Static + interactive charts, dashboard
 ├── phase4_modelling.py             # ML models, evaluation, feature importance
+├── phase5_port.py             # README file and requirements.txt generation
 ├── kepler_dashboard.py             # Streamlit interactive dashboard
 ├── requirements.txt                # Python dependencies
 └── README.md
@@ -167,6 +168,7 @@ python phase1_eda.py           # generates kepler_clean.csv + EDA charts
 python phase2_statistics.py    # generates statistical analysis charts
 python phase3_visualizations.py  # generates interactive charts + dashboard
 python phase4_modelling.py     # trains models, generates evaluation charts
+python phase5_port.py             # README file and requirements.txt generation
 ```
  
 ### 5. Launch the interactive dashboard
