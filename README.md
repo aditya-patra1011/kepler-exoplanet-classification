@@ -1,102 +1,197 @@
- # KEPLER EXOPLANET CLASSIFICATION
-
-> Using machine learning to ditinguish confirmed exoplanets from false positives
-> In NASA's Kepler Space Telescope Dataset
-
+ # 🪐 Kepler Exoplanet Classification
+ 
+> Using machine learning to distinguish confirmed exoplanets from false positives
+> in NASA's Kepler Space Telescope dataset — achieving **99% accuracy** and **ROC-AUC of 0.9989**.
+ 
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-1.3+-orange.svg)](https://scikit-learn.org/)
+[![XGBoost](https://img.shields.io/badge/XGBoost-1.7+-red.svg)](https://xgboost.readthedocs.io/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.25+-brightgreen.svg)](https://streamlit.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+ 
 ---
-
-## Project Overview
-NASA's Kepler mission monitored over 150,000 stars for tiny dips in brightness
-caused by orbiting planets passing in front of their host star. Each candidate
-planet - ca;;ed a Kepler Object Of Interest (KOI) - was then classified as
-CONFIRMED, FLASE POSITIVE, or CANDIDATE based on the follow-up analysis
-
-This project applies Exploratory Data Analysis, statistical testing, and machine
-learning to the cumulative Kepler dataset (9,564 objects, 50 features) to:
-
- - Understand the physical properties that distinguish real planets from flase detection
- - Build a classification model that predicts whether a KOI is a confirmed planet
- - Deploy an interactive dashboard for exploring the dataset visually
-
+ 
+## 🔭 Project Overview
+ 
+NASA's Kepler mission (2009–2018) monitored over 150,000 stars searching for tiny,
+periodic dips in brightness caused by planets crossing in front of their host star.
+Each candidate detection — called a **Kepler Object of Interest (KOI)** — was
+classified as one of three categories:
+ 
+| Label | Meaning |
+|---|---|
+| `CONFIRMED` | Verified real planet through follow-up observations |
+| `FALSE POSITIVE` | Not a planet — usually a background eclipsing binary star |
+| `CANDIDATE` | Unverified — still under investigation |
+ 
+This project applies a full data science pipeline — exploratory analysis, statistical
+testing, interactive visualization, and machine learning — to the cumulative Kepler
+dataset (9,564 objects, 50 features) to:
+ 
+- Understand which physical measurements distinguish real planets from false detections
+- Statistically prove that confirmed and false positive planets are meaningfully different
+- Build and compare ML models that automate this classification with high reliability
+- Deploy an interactive dashboard for exploring the dataset visually
 ---
-
-## Key Findings
- - **Class imbalance**: 52.5% of the objects are FALSE POSITIVE, 24% CONFIRMED, 23.5 CANDIDATE
- - **Planet Radius**: ('koi_prad') is the strongest single predictor - confirmed planet cluster
-    below 4 Earth Radii, while false positives are spread widely
- - **Insolation flux** and **disposition score** are the second and third most predictive features
- - **XGBoost acheived ROC-AUC of 0.XX** on the held-out test set, outperforming the Random Forest baseline of 0.XX
- - Confirmed Planets and flase positives are statistically significantly different across all 12 key features (t-test p < 0.001 for each)
-
+ 
+## 📊 Key Findings
+ 
+- **Class imbalance**: 52.5% FALSE POSITIVE, 24% CONFIRMED, 23.5% CANDIDATE —
+  making naive accuracy a misleading metric; F1 and ROC-AUC were used instead
+- **Planet radius** (`koi_prad`) is the strongest single discriminator — confirmed
+  planets cluster below 4 Earth radii while false positives spread across a much
+  wider range
+- **All 12 key features** showed statistically significant differences between
+  CONFIRMED and FALSE POSITIVE classes (Welch t-test p < 0.001 for every feature)
+- **koi_insol** and **koi_teq** are highly correlated (r ≈ 0.9), meaning stellar
+  flux and equilibrium temperature carry largely redundant information
+- **Random Forest** achieved the best performance across all three models
 ---
-
-## Project Structure
+ 
+## 🤖 Model Performance
+ 
+| Model | F1 Score | ROC-AUC | Accuracy |
+|---|---|---|---|
+| 🏆 Random Forest | 0.9943 | 0.9989 | 99% |
+| XGBoost | 0.9930 | 0.9981 | 99% |
+| Gradient Boosting | 0.9924 | 0.9974 | 99% |
+ 
+> Evaluated on a held-out test set of 1,241 objects (20% of labeled data).
+> SMOTE was applied to the training set to correct class imbalance before training.
+ 
+**5-Fold Cross-Validation (Random Forest):**
+```
+AUC per fold : [0.9991  0.9998  0.9995  0.9996  0.9999]
+Mean AUC     : 0.9996 ± 0.0003
+```
+ 
+> **Note:** The high model performance (AUC > 0.99) is partly attributable to the
+> inclusion of `koi_score` — NASA's own disposition confidence score — as a training
+> feature. This is intentional: the goal is to replicate and understand NASA's
+> classification pipeline, not to predict without it.
+ 
+---
+ 
+## 🗂️ Project Structure
+ 
 ```
 kepler-exoplanet-classification/
 │
 ├── data/
-│   ├── cumulative.csv          # Raw Kepler dataset (NASA)
-│   └── kepler_clean.csv        # Cleaned dataset (output of Phase 1)
+│   ├── cumulative.csv              # Raw Kepler dataset (from NASA / Kaggle)
+│   └── kepler_clean.csv            # Cleaned dataset (generated by Phase 1)
 │
-├── phase1_eda.py               # Data loading, cleaning, distributions
-├── phase2_statistics.py        # Hypothesis tests, correlations, outliers
-├── phase3_visualizations.py    # Static + interactive charts, Streamlit app
-├── phase4_modeling.py          # ML models, evaluation, feature importance
-├── phase5_portfolio.py         # README generator, notebook guide
+├── outputs/
+│   ├── p1_class_distribution.png   # Class balance bar chart
+│   ├── p1_distribution.png         # KDE distributions per class
+│   ├── p1_boxplots.png             # Box plots per class
+│   ├── p2_correlation_heatmap.png  # Feature correlation matrix
+│   ├── p1_violin_plots.png         # Violin plots per class
+│   ├── p2_target_correlation.png   # Point-biserial correlation with target
+│   ├── p3_pairplot.png             # Seaborn pair plot
+│   ├── p3_scatter_radius_period.html   # Interactive scatter plot
+│   ├── p3_histogram_radius.html        # Interactive histogram
+│   ├── p3_boxplots_interactive.html    # Interactive box plots
+│   ├── p3_correlation_heatmap.html     # Interactive heatmap
+│   ├── p4_confusion_matrices.png   # Confusion matrices for all models
+│   ├── p4_roc_curves.png           # ROC curves for all models
+│   └── p4_feature_importance.png   # Feature importance (RF + XGBoost)
 │
-├── kepler_dashboard.py         # Streamlit dashboard (standalone)
-│
-│
-├── outputs/                    # All saved charts and HTML files
-│
-├── requirements.txt
+├── phase1_eda.py                   # Data loading, cleaning, EDA
+├── phase2_statistics.py            # Hypothesis tests, correlations, outliers
+├── phase3_visualizations.py        # Static + interactive charts, dashboard
+├── phase4_modelling.py             # ML models, evaluation, feature importance
+├── kepler_dashboard.py             # Streamlit interactive dashboard
+├── requirements.txt                # Python dependencies
 └── README.md
 ```
-
+ 
 ---
-
-## 🛠️ Tech stack
-
-| Category       | Libraries                              |
-|----------------|----------------------------------------|
-| Data handling  | pandas, numpy                          |
-| Visualization  | matplotlib, seaborn, plotly            |
-| Statistics     | scipy                                  |
-| ML models      | scikit-learn, xgboost                  |
-| Imbalance      | imbalanced-learn (SMOTE)               |
-| Dashboard      | streamlit                              |
-
+ 
+## 📈 Sample Visualizations
+ 
+### Class Distribution
+![Class Distribution](outputs/p1_class_distribution.png)
+ 
+### Feature Distributions by Class
+![Distributions](outputs/p1_distribution.png)
+ 
+### Box Plots — Class Separation
+![Box Plots](outputs/p1_boxplots.png)
+ 
+### Correlation Heatmap
+![Heatmap](outputs/p2_correlation_heatmap.png)
+ 
+### ROC Curves — Model Comparison
+![ROC Curves](outputs/p4_roc_curves.png)
+ 
+### Feature Importance
+![Feature Importance](outputs/p4_feature_importance.png)
+ 
 ---
-
+ 
+## 🛠️ Tech Stack
+ 
+| Category | Libraries |
+|---|---|
+| Data handling | pandas, numpy |
+| Visualization | matplotlib, seaborn, plotly |
+| Statistics | scipy |
+| ML models | scikit-learn, xgboost |
+| Class imbalance | imbalanced-learn (SMOTE) |
+| Dashboard | streamlit |
+ 
+---
+ 
 ## ▶️ How to Run
-
+ 
 ### 1. Clone the repository
 ```bash
-git clone hhtps://github.com/aditya-patra1011/kepler-exoplanet-classification
+git clone https://github.com/aditya-patra1011/kepler-exoplanet-classification.git
 cd kepler-exoplanet-classification
 ```
-
-### 2. Install Dependcies
+ 
+### 2. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
-
-### 3. Run the analysis phases in order
+ 
+### 3. Download the dataset
+Download `cumulative.csv` from Kaggle and place it inside the `data/` folder:
+ 
+👉 [Kepler Exoplanet Search Results — Kaggle](https://www.kaggle.com/datasets/nasa/kepler-exoplanet-search-results)
+ 
+### 4. Run the analysis phases in order
 ```bash
-python phase1_eda.py
-python phase2_statistics.py
-python phase3_visualizations.py
-python phase4_modeling.py
+python phase1_eda.py           # generates kepler_clean.csv + EDA charts
+python phase2_statistics.py    # generates statistical analysis charts
+python phase3_visualizations.py  # generates interactive charts + dashboard
+python phase4_modelling.py     # trains models, generates evaluation charts
 ```
-### 4. Launch the interactive dashboard
+ 
+### 5. Launch the interactive dashboard
 ```bash
 streamlit run kepler_dashboard.py
 ```
+---
 
-### 5. Or open the full jupyter notebook
-```bash
-jupyter notebooks/kepler_full_analysis.ipynb
-```
+## 📖 Project Phases
+ 
+| Phase | File | Description |
+|---|---|---|
+| 1 — EDA | `phase1_eda.py` | Load, clean, and visually explore the dataset |
+| 2 — Statistics | `phase2_statistics.py` | Hypothesis tests, correlation matrix, outlier detection |
+| 3 — Visualization | `phase3_visualizations.py` | Interactive Plotly charts and Streamlit dashboard |
+| 4 — ML Modeling | `phase4_modelling.py` | Train, evaluate, and compare Random Forest, XGBoost, Gradient Boosting |
+
+---
+ 
+## 🙏 Acknowledgements
+ 
+- [NASA Exoplanet Archive](https://exoplanetarchive.ipac.caltech.edu/) for the dataset
+- [Kaggle](https://www.kaggle.com/datasets/nasa/kepler-exoplanet-search-results) for hosting the data
+- The Kepler mission team for 9 years of planet hunting
+
 ---
 
 ## Dataset
