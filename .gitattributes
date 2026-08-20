@@ -1,0 +1,2 @@
+*.ipynb linguist-language=Python
+outputs/*.html linguist-generated=true
