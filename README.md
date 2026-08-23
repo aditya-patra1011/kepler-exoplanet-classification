@@ -1,4 +1,4 @@
- # 🪐 Kepler Exoplanet Classification
+# 🪐 Kepler Exoplanet Classification
 
 > Using machine learning to distinguish confirmed exoplanets from false positives
 > in NASA's Kepler Space Telescope dataset — achieving **99% accuracy** and **ROC-AUC of 0.9989**.
@@ -18,11 +18,11 @@ periodic dips in brightness caused by planets crossing in front of their host st
 Each candidate detection — called a **Kepler Object of Interest (KOI)** — was
 classified as one of three categories:
 
-| Label | Meaning |
-|---|---|
-| `CONFIRMED` | Verified real planet through follow-up observations |
+| Label            | Meaning                                                   |
+| ---------------- | --------------------------------------------------------- |
+| `CONFIRMED`      | Verified real planet through follow-up observations       |
 | `FALSE POSITIVE` | Not a planet — usually a background eclipsing binary star |
-| `CANDIDATE` | Unverified — still under investigation |
+| `CANDIDATE`      | Unverified — still under investigation                    |
 
 This project applies a full data science pipeline — exploratory analysis, statistical
 testing, interactive visualization, and machine learning — to the cumulative Kepler
@@ -32,6 +32,7 @@ dataset (9,564 objects, 50 features) to:
 - Statistically prove that confirmed and false positive planets are meaningfully different
 - Build and compare ML models that automate this classification with high reliability
 - Deploy an interactive dashboard for exploring the dataset visually
+
 ---
 
 ## 📊 Key Findings
@@ -46,20 +47,22 @@ dataset (9,564 objects, 50 features) to:
 - **koi_insol** and **koi_teq** are highly correlated (r ≈ 0.9), meaning stellar
   flux and equilibrium temperature carry largely redundant information
 - **Random Forest** achieved the best performance across all three models
+
 ---
 
 ## 🤖 Model Performance
 
-| Model | F1 Score | ROC-AUC | Accuracy |
-|---|---|---|---|
-| 🏆 Random Forest | 0.9943 | 0.9989 | 99% |
-| XGBoost | 0.9930 | 0.9981 | 99% |
-| Gradient Boosting | 0.9924 | 0.9974 | 99% |
+| Model             | F1 Score | ROC-AUC | Accuracy |
+| ----------------- | -------- | ------- | -------- |
+| 🏆 Random Forest  | 0.9943   | 0.9989  | 99%      |
+| XGBoost           | 0.9930   | 0.9981  | 99%      |
+| Gradient Boosting | 0.9924   | 0.9974  | 99%      |
 
 > Evaluated on a held-out test set of 1,241 objects (20% of labeled data).
 > SMOTE was applied to the training set to correct class imbalance before training.
 
 **5-Fold Cross-Validation (Random Forest):**
+
 ```
 AUC per fold : [0.9991  0.9998  0.9995  0.9996  0.9999]
 Mean AUC     : 0.9996 ± 0.0003
@@ -111,57 +114,67 @@ kepler-exoplanet-classification/
 ## 📈 Sample Visualizations
 
 ### Class Distribution
+
 ![Class Distribution](outputs/p1_class_distribution.png)
 
 ### Feature Distributions by Class
+
 ![Distributions](outputs/p1_distribution.png)
 
 ### Box Plots — Class Separation
+
 ![Box Plots](outputs/p1_boxplots.png)
 
 ### Correlation Heatmap
+
 ![Heatmap](outputs/p2_correlation_heatmap.png)
 
 ### ROC Curves — Model Comparison
+
 ![ROC Curves](outputs/p4_roc_curves.png)
 
 ### Feature Importance
+
 ![Feature Importance](outputs/p4_feature_importance.png)
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Category | Libraries |
-|---|---|
-| Data handling | pandas, numpy |
-| Visualization | matplotlib, seaborn, plotly |
-| Statistics | scipy |
-| ML models | scikit-learn, xgboost |
-| Class imbalance | imbalanced-learn (SMOTE) |
-| Dashboard | streamlit |
+| Category        | Libraries                   |
+| --------------- | --------------------------- |
+| Data handling   | pandas, numpy               |
+| Visualization   | matplotlib, seaborn, plotly |
+| Statistics      | scipy                       |
+| ML models       | scikit-learn, xgboost       |
+| Class imbalance | imbalanced-learn (SMOTE)    |
+| Dashboard       | streamlit                   |
 
 ---
 
 ## ▶️ How to Run
 
 ### 1. Clone the repository
+
 ```bash
 git clone https://github.com/aditya-patra1011/kepler-exoplanet-classification.git
 cd kepler-exoplanet-classification
 ```
 
 ### 2. Install dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### 3. Download the dataset
+
 Download `cumulative.csv` from Kaggle and place it inside the `data/` folder:
 
 👉 [Kepler Exoplanet Search Results — Kaggle](https://www.kaggle.com/datasets/nasa/kepler-exoplanet-search-results)
 
 ### 4. Run the analysis phases in order
+
 ```bash
 python phase1_eda.py           # generates kepler_clean.csv + EDA charts
 python phase2_statistics.py    # generates statistical analysis charts
@@ -170,6 +183,7 @@ python phase4_modelling.py     # trains models, generates evaluation charts
 ```
 
 ### 5. Launch the interactive dashboard
+
 ```bash
 streamlit run kepler_dashboard.py
 ```
@@ -178,12 +192,12 @@ streamlit run kepler_dashboard.py
 
 ## 📁 Dataset
 
-| Property | Value |
-|---|---|
-| Source | NASA Exoplanet Archive / Kaggle |
-| Rows | 9,564 Kepler Objects of Interest |
-| Columns | 50 features |
-| Target | `koi_disposition` (CONFIRMED / FALSE POSITIVE / CANDIDATE) |
+| Property     | Value                                                                                        |
+| ------------ | -------------------------------------------------------------------------------------------- |
+| Source       | NASA Exoplanet Archive / Kaggle                                                              |
+| Rows         | 9,564 Kepler Objects of Interest                                                             |
+| Columns      | 50 features                                                                                  |
+| Target       | `koi_disposition` (CONFIRMED / FALSE POSITIVE / CANDIDATE)                                   |
 | Key features | orbital period, planet radius, stellar flux, equilibrium temperature, SNR, disposition score |
 
 👉 [NASA Exoplanet Archive](https://exoplanetarchive.ipac.caltech.edu/)
@@ -193,12 +207,12 @@ streamlit run kepler_dashboard.py
 
 ## 📖 Project Phases
 
-| Phase | File | Description |
-|---|---|---|
-| 1 — EDA | `phase1_eda.py` | Load, clean, and visually explore the dataset |
-| 2 — Statistics | `phase2_statistics.py` | Hypothesis tests, correlation matrix, outlier detection |
-| 3 — Visualization | `phase3_visualizations.py` | Interactive Plotly charts and Streamlit dashboard |
-| 4 — ML Modeling | `phase4_modelling.py` | Train, evaluate, and compare Random Forest, XGBoost, Gradient Boosting |
+| Phase             | File                       | Description                                                            |
+| ----------------- | -------------------------- | ---------------------------------------------------------------------- |
+| 1 — EDA           | `phase1_eda.py`            | Load, clean, and visually explore the dataset                          |
+| 2 — Statistics    | `phase2_statistics.py`     | Hypothesis tests, correlation matrix, outlier detection                |
+| 3 — Visualization | `phase3_visualizations.py` | Interactive Plotly charts and Streamlit dashboard                      |
+| 4 — ML Modeling   | `phase4_modelling.py`      | Train, evaluate, and compare Random Forest, XGBoost, Gradient Boosting |
 
 ---
 
@@ -207,7 +221,9 @@ streamlit run kepler_dashboard.py
 - [NASA Exoplanet Archive](https://exoplanetarchive.ipac.caltech.edu/) for the dataset
 - [Kaggle](https://www.kaggle.com/datasets/nasa/kepler-exoplanet-search-results) for hosting the data
 - The Kepler mission team for 9 years of planet hunting
+
 ## Dataset
+
 - **Source**: [NASA Exoplanet Archive](https://exoplanetarchive.ipac.caltech.edu/)
 - **Also on**: [Kaggle- Kepler Exoplanet Search Results](https://www.kaggle.com/datadets/nasa/kepler-exoplanet-search-results)
 - **Rows**: 9,564 Kepler Objects of Interest
@@ -216,7 +232,9 @@ streamlit run kepler_dashboard.py
 ---
 
 ## Author
+
 **M. Aditya Patra**
+
 - LinkedIn: [linkedin.com/in/M. Aditya Patra](www.linkedin.com/in/m-aditya-patra-1339853b9)
 - GitHub: [github.com/aditya-patra1011](https://github.com/aditya-patra1011)
 - Portfolio: [portfolio-three-theta-vwkfspsq2q.vercel.app/](https://portfolio-three-theta-vwkfspsq2q.vercel.app/)
@@ -224,4 +242,5 @@ streamlit run kepler_dashboard.py
 ---
 
 ## License
+
 MIT License - feel free to use and adapt this project
