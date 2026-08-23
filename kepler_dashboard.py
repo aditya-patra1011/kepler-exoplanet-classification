@@ -21,7 +21,9 @@ COLOR_MAP = {
 # ---- LOAD DATA -----------------
 @st.cache_data
 def load_data():
-  df = pd.read_csv('kepler_clean.csv')
+  import os
+  BASE = r'C:\Users\adity\Desktop\Kepler-Exoplanet Project'
+  df = pd.read_csv(os.path.join(BASE, 'data', 'kepler_clean.csv'))
   return df
 
 df = load_data()
