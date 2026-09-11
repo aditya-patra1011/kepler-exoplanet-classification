@@ -12,6 +12,7 @@ Best result: **F1 ≈ 0.996, ROC-AUC ≈ 0.999** (full feature set) - with a del
 
 ## Project Structure
 
+```
 Kepler-Exoplanet-Project/
 ├── assets/
 │ └── dashboard/ # Screenshots of each dashboard tab, for the README/portfolio
@@ -84,9 +85,9 @@ Kepler-Exoplanet-Project/
 ├── LICENSE
 ├── README.md
 └── requirements.txt
+```
 
 ## Dataset
-
 - Source: Kepler Objects of Interest (`kepler_clean.csv`) - 7,995 objects, acquired from Kaggle
 - Target: `koi_disposition` - modeled as a binary task, `CONFIRMED` vs `FALSE POSITIVE` (`CANDIDATE` rows are excluded from training but included in dashboard exploration)
 - Key features (16 total):
