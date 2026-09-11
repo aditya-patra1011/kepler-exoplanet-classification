@@ -203,3 +203,24 @@ streamlit run app.py
 | Gradient Boosting   | 0.9291–0.9297     | 0.9749                 |
 | SVM                 | 0.8875            | 0.9535                 |
 | Logistic Regression | 0.8622            | 0.9280                 |
+
+## Future Work
+
+- Extend classification to the `CANDIDATE` class using the trained models as a starting point
+- Investigate the 9 hard misclassified cases for potential label noise
+- Adding a stacking ensemble on the Raw Physical tier, where model diversity is higher
+
+## Acknowledgments
+
+- Data: [NASA Exoplanet Archive](https://exoplanetarchive.ipac.caltech.edu/) / Kepler cumulative KOI table
+- Built as part of personal ML portfolio project
+
+## Author
+
+**Aditya**
+Github: [@aditya-patra1011](https://github.com/aditya-patra1011)
+Portfolio: [portfolioaditya-pearl.vercel.app](https://portfolioaditya-pearl.vercel.app)
+
+## LICENSE
+
+This project is licensed under the terms of the LICENSE file included in this repository.
