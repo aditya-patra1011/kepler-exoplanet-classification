@@ -88,6 +88,7 @@ Kepler-Exoplanet-Project/
 ```
 
 ## Dataset
+
 - Source: Kepler Objects of Interest (`kepler_clean.csv`) - 7,995 objects, acquired from Kaggle
 - Target: `koi_disposition` - modeled as a binary task, `CONFIRMED` vs `FALSE POSITIVE` (`CANDIDATE` rows are excluded from training but included in dashboard exploration)
 - Key features (16 total):
@@ -120,12 +121,11 @@ Dropping `koi_score` and the `koi_fpflag_*` vetting flags causes a statistically
 
 Six issues were identified and fixed during development, each verified with before/after results:
 
-1. McNemar's test 0/0 edge case — an operator precedence bug (& vs and) caused identical-prediction model pairs to be misreported as statistically significant instead of "not significant."
-2. SVM trained on the wrong feature scope (Cell 6, full-feature comparison) — a leftover-variable dependency meant SVM was accidentally trained and evaluated on physical-only scaled data, but only worked when notebook cells were run out of order.
-3. SVM trained on the wrong feature scope (Cell 11, physical-only ablation) — the mirror-image bug: SVM was accidentally trained and evaluated on full-feature scaled data here, canceling out and masking bug #2.
-4. SMOTE applied before the cross-validation split — synthetic minority-class samples leaked across CV folds, inflating the reported AUC. Corrected AUC: 0.9987, down from an inflated 0.9996.
-5. Imputer fit before the cross-validation split — median imputation used the full dataset before folds were created, leaking a summary statistic across folds. Fixed by moving the imputer inside the CV pipeline; verified to have negligible impact on results.
-6. Host-star leakage across train/test — 17.4% of test rows shared a host star with a training row, risking inflated performance from memorized stellar parameters rather than genuine generalization. Fixed with a star-grouped split (GroupShuffleSplit on rounded RA/Dec, since no kepid column was available); verified negligible performance change after the fix, confirming the models weren't relying on this leakage.
+1. McNemar's test 0/0 edge case (operator precedence bug: `&` vs `and`)
+2. SVM training on the wrong feature scope (Cell 6, full feature comparison)
+3. SVM trained on the wrong feature scope (Cell 11, physcial-only ablation - the mirror-image bug that masked #2)
+4. SMOTE applied before the CV split (synthetic-point leakage across folds - corrected AUC 0.9987, down from an inflated 0.996)
+5. Imputer fit before leakage across train/test split (17.4% of test rows shared a host star with a training row) - fixed with `GroupShuffleSplit`
 
 ![Methodology Audit - bugs found & fixed](assets/dashboard/methodology_audit_bugs.png)
 
