@@ -1,6 +1,22 @@
 # Kepler Exoplanet Classification
 
+![Python](https://img.shields.io/badge/python-3.13-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Streamlit](https://img.shields.io/badge/dashboard-Streamlit-red)
+
 A machine learning project that classifies Kepler Objects of Interest (KOIs) as `CONFIRMED` exoplanets or `FALSE POSITIVES` detections, built across ten progressive analysis phases and shipped as an interactive Streamlit dashboard.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Project Structure](#project-structure)
+- [Dataset](#dataset)
+- [Methodology](#methodology)
+- [Key Finding](#key-finding)
+- [Methodology Audit](#methodology-audit)
+- [Dashboard Walkthrough](#dashboard-walkthrough)
+- [Running the Dashboard](#running-the-dashboard)
+- [Results Summary](#results-summaryfull-feature-tier)
 
 ## Overview
 
